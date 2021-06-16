@@ -1,9 +1,12 @@
 const express = require('express');
 const conectarDB = require('./config/db');
-const cors = require('cors');
+const corsMiddleware = require('./middleware/cors/index');
 
 // crear el servidor
 const app = express();
+
+app.options('*', corsMiddleware);
+app.use(corsMiddleware);
 
 // Conectar a la base de datos
 conectarDB();
