@@ -11,8 +11,6 @@ app.use(corsMiddleware);
 // Conectar a la base de datos
 conectarDB();
 
-// habilitar cors
-app.use(cors());
 
 // Habilitar express.json
 app.use( express.json({ extended: true }));
