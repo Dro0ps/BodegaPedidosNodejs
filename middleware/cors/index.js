@@ -1,7 +1,7 @@
 const cors = require ('cors');
 
 const corsOption = {
-    origin: 'https://musing-curie-8294f5.netlify.app/',
+    origin: '*',
     optionsSuccessStatus: 200
 };
 
