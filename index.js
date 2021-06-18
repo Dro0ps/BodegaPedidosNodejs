@@ -1,24 +1,15 @@
 const express = require('express');
 const conectarDB = require('./config/db');
-const corsMiddleware = require('./middleware/cors/index');
+const cors = require('cors');
 
 // crear el servidor
 const app = express();
 
-app.options('*', corsMiddleware);
-app.use(corsMiddleware);
-
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", '*');
-    res.header("Access-Control-Allow-Credentials", true);
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
-    next();
-  });
-
 // Conectar a la base de datos
 conectarDB();
 
+// habilitar cors
+app.use(cors());
 
 // Habilitar express.json
 app.use( express.json({ extended: true }));

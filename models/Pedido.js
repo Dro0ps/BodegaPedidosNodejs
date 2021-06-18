@@ -43,8 +43,7 @@ const PedidoSchema = mongoose.Schema({
     },
     estado_pedido: {
         type: Boolean,
-        required: true,
-        trim: true,
+        default: false,
         
     },
     creador: {
