@@ -1,6 +1,36 @@
 const Pedido = require('../models/Pedido');
 const { validationResult } = require('express-validator');
 
+
+const multer = require('multer');
+const shortid = require('shortid');
+
+const configuracionMulter = {
+    storage: fileStorage = multer.diskStorage({
+        destination: (req, res, next) => {
+            next(null, __dirname+'/../uploads/');
+        },
+        filename : (req, file, next) => {
+            const extension = file.mimetype.split('/')[1];
+            next(null, `${shortid.generate()}.${extension}`);
+        }
+    })
+    
+}
+const upload = multer(configuracionMulter).single('archivo');
+
+// Sube archivo en el servidor
+exports.subirArchivo = (req, res, next) => {
+    upload(req, res, function(error) {
+        if(error) {
+            console.log(error);
+            // TODO :Manejar Errores
+        } else {
+            next();
+        }
+    })
+}
+
 exports.crearPedido = async (req, res) => {
 
     // Revisar si hay errores
@@ -16,6 +46,9 @@ exports.crearPedido = async (req, res) => {
 
         // Guardar el creador via JWT
         pedido.creador = req.usuario.id;
+
+        // Leer el nombre del archivo
+        pedido.archivo = req.file.filename;
 
         // guardamos el pedido
         pedido.save();
@@ -58,7 +91,8 @@ exports.actualizarPedido = async (req, res) => {
         fecha_deposito,
         tipo_documento,
         num_documento,
-        estado_pedido } = req.body;
+        estado_pedido,
+        estado_despacho } = req.body;
 
 
     const nuevoPedido = {};
@@ -73,9 +107,13 @@ exports.actualizarPedido = async (req, res) => {
         nuevoPedido.tipo_documento = tipo_documento;
         nuevoPedido.num_documento = num_documento;
         nuevoPedido.estado_pedido = estado_pedido;
+        nuevoPedido.estado_despacho = estado_despacho;
     }
     if(estado_pedido){
         nuevoPedido.estado_pedido = estado_pedido;
+    }
+    if(estado_despacho){
+        nuevoPedido.estado_despacho = estado_despacho;
     }
 
     try {
